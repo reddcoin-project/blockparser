@@ -1,4 +1,3 @@
-
 SHELL=/bin/sh
 MAKEFLAGS=-j8
 
@@ -7,7 +6,7 @@ CPLUS = g++
 INC =                           \
         -I.                     \
         -DNDEBUG                \
-#        -DLITECOIN              \
+        -DREDDCOIN              \
 
 COPT =                          \
         -g0                     \
@@ -53,6 +52,13 @@ all:parser
 	@mkdir -p .objs
 	@${CPLUS} -MD ${INC} ${COPT}  -c cb/allBalances.cpp -o .objs/allBalances.o
 	@mv .objs/allBalances.d .deps
+	
+.objs/richlist2JSON.o : cb/richlist2JSON.cpp
+	@echo c++ -- cb/richlist2JSON.cpp
+	@mkdir -p .deps
+	@mkdir -p .objs
+	@${CPLUS} -MD ${INC} ${COPT}  -c cb/richlist2JSON.cpp -o .objs/richlist2JSON.o
+	@mv .objs/richlist2JSON.d .deps
 
 .objs/closure.o : cb/closure.cpp
 	@echo c++ -- cb/closure.cpp
@@ -161,6 +167,7 @@ all:parser
 
 OBJS=                       \
     .objs/allBalances.o     \
+	.objs/richlist2JSON.o     \
     .objs/callback.o        \
     .objs/closure.o         \
     .objs/dumpTX.o          \
