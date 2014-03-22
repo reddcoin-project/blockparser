@@ -1,16 +1,20 @@
-blockparser
+rddblockparser
 ===========
 
     Credits:
     --------
 
-        Written by znort987@yahoo.com
-        If you find this useful: 1ZnortsoStC1zSTXbW6CUtkvqew8czMMG
-
+        Modified by Leonard Simonse
+        Originally written by znort987@yahoo.com
+        If you find this useful: 
+        
+        BTC: 145TTNrbPznUtj9jLh7Mn4JeAdEXQjcMqs
+        RDD: RctBPR4vuQmgDuqABUnrqCWjEDwaqF2FWd
+        
     What:
     -----
 
-        A fairly fast, quick and dirty bitcoin whole blockchain parser.
+        A fairly fast, quick and dirty bitcoin and reddcoin whole blockchain parser.
 
     Why:
     ----
@@ -26,13 +30,13 @@ blockparser
 
         . Turn your x86-64 Ubuntu box on
 
-        . Make sure you have an up to date satoshi client blockchain in ~/.bitcoin
+        . Make sure you have an up to date satoshi client blockchain in ~/.bitcoin or ~/.reddcoin
 
         . Run this:
 
             sudo apt-get install libssl-dev build-essential g++-4.4 libboost-all-dev libsparsehash-dev git-core perl
-            git clone git://github.com/znort987/blockparser.git
-            cd blockparser
+            git clone git://github.com/lionzeye/rddblockparser.git
+            cd rddblockparser
             make
 
     Try it:
@@ -42,29 +46,25 @@ blockparser
 
             ./parser simpleStats
 
-        . Extract all transactions for popular address 1dice6wBxymYi3t94heUAG6MpG5eceLG1 (20 seconds)
+        . Extract all transactions for popular address RctBPR4vuQmgDuqABUnrqCWjEDwaqF2FWd (20 seconds)
 
-            ./parser transactions 06f1b66fa14429389cbffa656966993eab656f37
+            ./parser transactions RctBPR4vuQmgDuqABUnrqCWjEDwaqF2FWd
 
         . Compute the closure of an address, that is the list of addresses that provably belong to the same person (20 seconds):
 
-            ./parser closure 06f1b66fa14429389cbffa656966993eab656f37
+            ./parser closure RctBPR4vuQmgDuqABUnrqCWjEDwaqF2FWd
 
-        . Compute and print the balance for all keys ever used in a TX since the beginning of time (30 seconds):
+        . Compute and print the balance for all keys ever used in a TX since the beginning of time in a styled txt-format (30 seconds):
 
             ./parser allBalances >allBalances.txt
+            
+        . Compute and print the balance for all keys ever used in a TX since the beginning of time in the JSON-format (30 seconds):
 
-        . See how much of the BTC 10K pizza tainted each of the TX in the chain
-
-            ./parser taint >pizzaTaint.txt
+            ./parser richlist2JSON >balances.json
 
         . See all the block rewards and fees:
 
             ./parser rewards >rewards.txt
-
-        . See a greatly detailed dump of the pizza transaction
-
-            ./parser show
 
     Caveats:
     --------
@@ -77,7 +77,7 @@ blockparser
           point. For now: it works fine with 8 Gigs.
 
         . The code isn't particularly clean or well architected. It was just a quick way for me to learn
-          about bitcoin. There isnt much in the way of comments either.
+          about bitcoin/reddcoin. There isnt much in the way of comments either.
 
         . OTOH, it is fairly simple, short, and efficient. If you want to understand how the blockchain
           data structure works, the code in parser.cpp is a solid way to start.
@@ -88,14 +88,14 @@ blockparser
         . parser.cpp contains a generic parser that mmaps the blockchain, parses it and calls
           "user-defined" callbacks as it hits interesting bits of information.
 
-        . util.cpp contains a grab-bag of useful bitcoin related routines. Interesting examples include:
+        . util.cpp contains a grab-bag of useful bitcoin/reddcoin related routines. Interesting examples include:
 
             showScript
             getBaseReward
             solveOutputScript
             decompressPublicKey
 
-        . cb/allBalances.cpp    :   code to all balance of all addresses.
+        . cb/allBalances.cpp    :   code to get all the balances of all addresses ever used in a TX.
         . cb/closure.cpp        :   code to compute the transitive closure of an address
         . cb/dumpTX.cpp         :   code to display a transaction in very great detail
         . cb/help.cpp           :   code to dump detailed help for all other commands
@@ -123,6 +123,40 @@ blockparser
         . The code makes heavy use of the google dense hash maps. You can switch it to use sparse hash
           maps (see util.h, search for: DENSE, undef it). Sparse hash maps are slower but save quite a
           bit of RAM.
+          
+    Installing the Reddcoin Linux Daemon:
+    --------
+        To have a up-to-date copy of the blockchain on your system, you need to download, compile and run the reddcoin Linux daemon. Here's how you do it:
+    
+        IN YOUR LINUX (ubuntu) SHELL:
+    
+        sudo apt-get install git screen make automake build-essential libboost-all-dev yasm binutils libcurl4-openssl-dev openssl libssl-dev libdb++-dev
+    
+        cd ~
+        git clone https://github.com/reddcoin/reddcoin
+        cd ~/reddcoin/src
+        make -f makefile.unix USE_UPNP=-
+        cp reddcoind ..
+        cd ~
+        ./reddcoin/reddcoind  
+    
+        cat << "CONFIG" >> ~/.reddcoin/reddcoin.conf
+        server=1
+        rpcuser=yourusername
+        rpcpassword=yourpassword
+        daemon=1
+        gen=0
+        maxconnection=100
+        addnode=198.199.75.10
+        addnode=107.170.253.235
+        addnode=162.243.209.188
+        addnode=188.226.135.181
+        addnode=188.226.135.184
+        addnode=108.174.49.42
+        rpcport=45443
+        CONFIG
+    
+        ~/reddcoin/reddcoind
 
     License:
     --------
