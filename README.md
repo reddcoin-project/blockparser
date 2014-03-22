@@ -4,12 +4,8 @@ rddblockparser
     Credits:
     --------
 
-        Modified by Leonard Simonse
+        Modified by the Official Reddcoin Project
         Originally written by znort987@yahoo.com
-        If you find this useful: 
-        
-        BTC: 145TTNrbPznUtj9jLh7Mn4JeAdEXQjcMqs
-        RDD: RctBPR4vuQmgDuqABUnrqCWjEDwaqF2FWd
         
     What:
     -----
